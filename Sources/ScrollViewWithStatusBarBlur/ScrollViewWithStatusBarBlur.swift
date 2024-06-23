@@ -14,7 +14,7 @@ struct ScrollOffsetKey: PreferenceKey {
     }
 }
 
-struct ScrollViewWithStatusBarBlur<Content, Background>: View where Content: View, Background: View {
+public struct ScrollViewWithStatusBarBlur<Content, Background>: View where Content: View, Background: View {
     let content: Content
     let background: Background?
     
@@ -28,7 +28,7 @@ struct ScrollViewWithStatusBarBlur<Content, Background>: View where Content: Vie
     @Environment(\.displayScale) var scale
     @State var scrollOffset: CGFloat = 0
     
-    var body: some View {
+    public var body: some View {
         GeometryReader { outer in
             ScrollView {
                 content
