@@ -98,7 +98,7 @@ public struct ScrollViewWithStatusBarBlur<Content, Background>: View where Conte
                                 .fill(.clear)
                                 .frame(height: outer.size.height)
                         }
-                        .offset(y: scrollOffset + outer.safeAreaInsets.top)
+                        .offset(y: scrollOffset + outer.safeAreaInsets.top - topPadding)
                     }
                     .drawingGroup()
                     .blur(radius: blurRadius, opaque: false)
