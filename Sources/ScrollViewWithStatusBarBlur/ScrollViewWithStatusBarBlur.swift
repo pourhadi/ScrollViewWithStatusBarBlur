@@ -20,17 +20,20 @@ public struct ScrollViewWithStatusBarBlur<Content, Background>: View where Conte
     let blurRadius: CGFloat
     let topPadding: CGFloat
     let contentOpacity: CGFloat
+    let rerenderFlag: Bool
     
     public init(background: Background = Color.white,
                 blurRadius: CGFloat = 8.0,
                 topPadding: CGFloat = 10,
                 contentOpacity: CGFloat = 0.9,
+                rerenderFlag: Bool = false,
                 @ViewBuilder _ content: @escaping () -> Content) {
         self.content = content()
         self.background = background
         self.blurRadius = blurRadius
         self.topPadding = topPadding
         self.contentOpacity = contentOpacity
+        self.rerenderFlag = rerenderFlag
     }
     
     @State var image: UIImage? = nil
