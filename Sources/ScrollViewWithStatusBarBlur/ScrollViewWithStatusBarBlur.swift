@@ -89,11 +89,11 @@ public struct ScrollViewWithStatusBarBlur<Content, Background>: View where Conte
 
                     .mask(alignment: .top) {
                         VStack(spacing: 0) {
-                            Color.black.frame(height: topPadding)
-                            LinearGradient(colors: [.black, .black, .black, .clear],
+                            Color.black.frame(height: outer.safeAreaInsets.top + (topPadding * 2) - 5)
+                            LinearGradient(colors: [.black, .clear],
                                            startPoint: .top,
                                            endPoint: .bottom)
-                            .frame(height: outer.safeAreaInsets.top + topPadding)
+                            .frame(height: 5)
                             Rectangle()
                                 .fill(.clear)
                                 .frame(height: outer.size.height)
