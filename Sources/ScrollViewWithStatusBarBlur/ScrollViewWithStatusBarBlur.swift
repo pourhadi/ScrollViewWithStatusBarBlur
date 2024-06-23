@@ -31,58 +31,74 @@ public struct ScrollViewWithStatusBarBlur<Content, Background>: View where Conte
     public var body: some View {
         GeometryReader { outer in
             ScrollView {
-                content
-                    .frame(maxWidth: .infinity)
-                    .background {
-                        background
-                    }
-                    .coordinateSpace(name: "content")
-                    .overlay {
-                        GeometryReader { proxy in
-                            Color.clear
-                                .preference(key: ScrollOffsetKey.self, value: -proxy.frame(in: .named("content")).minY)
+                VStack {
+                    Color.clear.frame(height: 10)
+                    content
+                }
+                .frame(maxWidth: .infinity)
+                .background {
+                    background
+                }
+                .coordinateSpace(name: "content")
+                .overlay {
+                    GeometryReader { proxy in
+                        Color.clear
+                            .preference(key: ScrollOffsetKey.self, value: -proxy.frame(in: .named("content")).minY)
                             .onPreferenceChange(ScrollOffsetKey.self, perform: { value in
-                                    scrollOffset = value
-                                })
+                                print(scrollOffset)
+                                scrollOffset = value
+                            })
+                    }
+                }
+                .task {
+                    let renderer = ImageRenderer(content:
+                                                    VStack {
+                        Color.clear.frame(height: outer.safeAreaInsets.top + 10)
+                        content
+                    }
+                        .opacity(0.9)
+                        .frame(width: outer.size.width + outer.safeAreaInsets.leading + outer.safeAreaInsets.trailing)
+                        .background {
+                            background
+                                .ignoresSafeArea()
                         }
-                    }
-                    .task {
-                        let renderer = ImageRenderer(content: content
-                            .opacity(0.9)
-                            .frame(width: outer.size.width)
-                            .background {
-                                background
-                            }
-                        )
-                        renderer.isOpaque = true
-                        renderer.scale = scale
-                        image = renderer.uiImage
-                    }
+                                                 
+                    )
+                    renderer.isOpaque = true
+                    renderer.scale = scale
+                    image = renderer.uiImage
+                }
             }
             .overlay(alignment: .top) {
                 if let image = image {
-                    Image(uiImage: image)
-                        .frame(maxWidth: .infinity)
-                        .mask(alignment: .top) {
-                            VStack(spacing: 0) {
-                                Rectangle()
-                                    .fill(.black)
-                                    .frame(height: 100)
-                                LinearGradient(colors: [.black, .black, .clear], startPoint: .top, endPoint: .bottom)
-                                    .frame(height: outer.safeAreaInsets.top + 20)
-
-                                Rectangle()
-                                    .fill(.clear)
-                                    .frame(height: outer.size.height)
-                            }
-                            .offset(y: scrollOffset - 100)
+                    VStack(spacing: 0) {
+                        Image(uiImage: image)
+                            .frame(maxWidth: .infinity)
+                    }
+                    .background { background }
+                    .ignoresSafeArea()
+                    
+                    .mask(alignment: .top) {
+                        VStack(spacing: 0) {
+                            Color.black.frame(height: 15)
+                            LinearGradient(colors: [.black, .black, .clear],
+                                           startPoint: .top,
+                                           endPoint: .bottom)
+                            .frame(height: outer.safeAreaInsets.top + 30)
+                            Rectangle()
+                                .fill(.clear)
+                                .frame(height: outer.size.height)
                         }
-                        .offset(y: -scrollOffset)
-                        .ignoresSafeArea()
-                        .allowsHitTesting(false)
-                        .blur(radius: 10, opaque: false)
+                        .offset(y: scrollOffset + outer.safeAreaInsets.top - 15)
+                    }
+                    .blur(radius: 8, opaque: false)
+                    .offset(y: -scrollOffset - outer.safeAreaInsets.top)
+                    .ignoresSafeArea()
+                    .allowsHitTesting(false)
+                    
                 }
             }
         }
+        
     }
 }
