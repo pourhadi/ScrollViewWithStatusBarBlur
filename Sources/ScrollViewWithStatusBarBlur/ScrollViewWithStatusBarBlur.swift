@@ -18,7 +18,7 @@ public struct ScrollViewWithStatusBarBlur<Content, Background>: View where Conte
     let content: Content
     let background: Background?
     
-    init(@ViewBuilder _ content: @escaping () -> Content,
+    public init(@ViewBuilder _ content: @escaping () -> Content,
          background: @escaping () -> Background? = { return nil }) {
         self.content = content()
         self.background = background()
