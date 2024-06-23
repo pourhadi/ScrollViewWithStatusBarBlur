@@ -62,22 +62,10 @@ public struct ScrollViewWithStatusBarBlur<Content, Background>: View where Conte
                     }
                 }
                 .task {
-                    let renderer = ImageRenderer(content:
-                                                    VStack(spacing: 0) {
-                        Color.clear.frame(height: outer.safeAreaInsets.top + topPadding)
-                        content
-                    }
-                        .opacity(contentOpacity)
-                        .frame(width: outer.size.width + outer.safeAreaInsets.leading + outer.safeAreaInsets.trailing)
-                        .background {
-                            background
-                                .ignoresSafeArea()
-                        }
-                                                 
-                    )
-                    renderer.isOpaque = true
-                    renderer.scale = scale
-                    image = renderer.uiImage
+                    render(outer: outer)
+                }
+                .onChange(of: rerenderFlag) { oldValue, newValue in
+                    render(outer: outer)
                 }
             }
             .overlay(alignment: .top) {
@@ -114,5 +102,25 @@ public struct ScrollViewWithStatusBarBlur<Content, Background>: View where Conte
             }
         }
         
+    }
+    
+    @MainActor
+    func render(outer: GeometryProxy) {
+        let renderer = ImageRenderer(content:
+                                        VStack(spacing: 0) {
+            Color.clear.frame(height: outer.safeAreaInsets.top + topPadding)
+            content
+        }
+            .opacity(contentOpacity)
+            .frame(width: outer.size.width + outer.safeAreaInsets.leading + outer.safeAreaInsets.trailing)
+            .background {
+                background
+                    .ignoresSafeArea()
+            }
+                                     
+        )
+        renderer.isOpaque = true
+        renderer.scale = scale
+        image = renderer.uiImage
     }
 }
