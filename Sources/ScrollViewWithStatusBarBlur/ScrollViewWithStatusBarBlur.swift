@@ -17,11 +17,17 @@ struct ScrollOffsetKey: PreferenceKey {
 public struct ScrollViewWithStatusBarBlur<Content, Background>: View where Content: View, Background: View {
     let content: Content
     let background: Background
+    let blurRadius: CGFloat
+    let topPadding: CGFloat
     
     public init(background: Background = Color.white,
+                blurRadius: CGFloat = 8.0,
+                topPadding: CGFloat = 15,
                 @ViewBuilder _ content: @escaping () -> Content) {
         self.content = content()
         self.background = background
+        self.blurRadius = blurRadius
+        self.topPadding = topPadding
     }
     
     @State var image: UIImage? = nil
@@ -32,7 +38,7 @@ public struct ScrollViewWithStatusBarBlur<Content, Background>: View where Conte
         GeometryReader { outer in
             ScrollView {
                 VStack {
-                    Color.clear.frame(height: 10)
+                    Color.clear.frame(height: topPadding)
                     content
                 }
                 .frame(maxWidth: .infinity)
@@ -45,7 +51,6 @@ public struct ScrollViewWithStatusBarBlur<Content, Background>: View where Conte
                         Color.clear
                             .preference(key: ScrollOffsetKey.self, value: -proxy.frame(in: .named("content")).minY)
                             .onPreferenceChange(ScrollOffsetKey.self, perform: { value in
-                                print(scrollOffset)
                                 scrollOffset = value
                             })
                     }
@@ -53,7 +58,7 @@ public struct ScrollViewWithStatusBarBlur<Content, Background>: View where Conte
                 .task {
                     let renderer = ImageRenderer(content:
                                                     VStack {
-                        Color.clear.frame(height: outer.safeAreaInsets.top + 10)
+                        Color.clear.frame(height: outer.safeAreaInsets.top + topPadding)
                         content
                     }
                         .opacity(0.9)
@@ -80,18 +85,18 @@ public struct ScrollViewWithStatusBarBlur<Content, Background>: View where Conte
                     
                     .mask(alignment: .top) {
                         VStack(spacing: 0) {
-                            Color.black.frame(height: 15)
+                            Color.black.frame(height: topPadding)
                             LinearGradient(colors: [.black, .black, .clear],
                                            startPoint: .top,
                                            endPoint: .bottom)
-                            .frame(height: outer.safeAreaInsets.top + 30)
+                            .frame(height: outer.safeAreaInsets.top + (topPadding * 2))
                             Rectangle()
                                 .fill(.clear)
                                 .frame(height: outer.size.height)
                         }
-                        .offset(y: scrollOffset + outer.safeAreaInsets.top - 15)
+                        .offset(y: scrollOffset + outer.safeAreaInsets.top - topPadding)
                     }
-                    .blur(radius: 8, opaque: false)
+                    .blur(radius: blurRadius, opaque: false)
                     .offset(y: -scrollOffset - outer.safeAreaInsets.top)
                     .ignoresSafeArea()
                     .allowsHitTesting(false)
