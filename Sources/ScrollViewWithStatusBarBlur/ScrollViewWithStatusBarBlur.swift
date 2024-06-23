@@ -16,10 +16,10 @@ struct ScrollOffsetKey: PreferenceKey {
 
 public struct ScrollViewWithStatusBarBlur<Content, Background>: View where Content: View, Background: View {
     let content: Content
-    let background: Background
+    let background: Background?
     
-    public init(@ViewBuilder _ content: @escaping () -> Content,
-                background: Background = Color.white) {
+    public init(background: Background? = nil,
+                @ViewBuilder _ content: @escaping () -> Content) {
         self.content = content()
         self.background = background
     }
@@ -51,7 +51,11 @@ public struct ScrollViewWithStatusBarBlur<Content, Background>: View where Conte
                             .opacity(0.9)
                             .frame(width: outer.size.width)
                             .background {
-                               background
+                                if let background = background {
+                                    background
+                                } else {
+                                    Color.white.ignoresSafeArea()
+                                }
                             }
                         )
                         renderer.isOpaque = true
