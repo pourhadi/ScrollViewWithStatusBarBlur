@@ -19,15 +19,18 @@ public struct ScrollViewWithStatusBarBlur<Content, Background>: View where Conte
     let background: Background
     let blurRadius: CGFloat
     let topPadding: CGFloat
+    let contentOpacity: CGFloat
     
     public init(background: Background = Color.white,
                 blurRadius: CGFloat = 8.0,
-                topPadding: CGFloat = 15,
+                topPadding: CGFloat = 10,
+                contentOpacity: CGFloat = 0.9,
                 @ViewBuilder _ content: @escaping () -> Content) {
         self.content = content()
         self.background = background
         self.blurRadius = blurRadius
         self.topPadding = topPadding
+        self.contentOpacity = contentOpacity
     }
     
     @State var image: UIImage? = nil
@@ -37,7 +40,7 @@ public struct ScrollViewWithStatusBarBlur<Content, Background>: View where Conte
     public var body: some View {
         GeometryReader { outer in
             ScrollView {
-                VStack {
+                VStack(spacing: 0) {
                     Color.clear.frame(height: topPadding)
                     content
                 }
@@ -57,11 +60,11 @@ public struct ScrollViewWithStatusBarBlur<Content, Background>: View where Conte
                 }
                 .task {
                     let renderer = ImageRenderer(content:
-                                                    VStack {
+                                                    VStack(spacing: 0) {
                         Color.clear.frame(height: outer.safeAreaInsets.top + topPadding)
                         content
                     }
-                        .opacity(0.9)
+                        .opacity(contentOpacity)
                         .frame(width: outer.size.width + outer.safeAreaInsets.leading + outer.safeAreaInsets.trailing)
                         .background {
                             background
@@ -77,27 +80,30 @@ public struct ScrollViewWithStatusBarBlur<Content, Background>: View where Conte
             .overlay(alignment: .top) {
                 if let image = image {
                     VStack(spacing: 0) {
+                        Color.clear.frame(height: topPadding)
                         Image(uiImage: image)
                             .frame(maxWidth: .infinity)
                     }
                     .background { background }
                     .ignoresSafeArea()
-                    
+
                     .mask(alignment: .top) {
                         VStack(spacing: 0) {
                             Color.black.frame(height: topPadding)
-                            LinearGradient(colors: [.black, .black, .clear],
+                            LinearGradient(colors: [.black, .black, .black, .clear],
                                            startPoint: .top,
                                            endPoint: .bottom)
-                            .frame(height: outer.safeAreaInsets.top + (topPadding * 2))
+                            .frame(height: outer.safeAreaInsets.top + topPadding)
                             Rectangle()
                                 .fill(.clear)
                                 .frame(height: outer.size.height)
                         }
-                        .offset(y: scrollOffset + outer.safeAreaInsets.top - topPadding)
+                        .offset(y: scrollOffset + outer.safeAreaInsets.top)
                     }
+                    .drawingGroup()
                     .blur(radius: blurRadius, opaque: false)
-                    .offset(y: -scrollOffset - outer.safeAreaInsets.top)
+
+                    .offset(y: -scrollOffset - outer.safeAreaInsets.top - topPadding)
                     .ignoresSafeArea()
                     .allowsHitTesting(false)
                     
