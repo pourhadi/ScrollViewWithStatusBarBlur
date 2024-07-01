@@ -27,7 +27,7 @@ public struct ScrollViewWithStatusBarBlur<Content, Background>: View where Conte
     public init(background: Background = Color.white,
                 blurRadius: CGFloat = 8.0,
                 topPadding: CGFloat = 10,
-                contentOpacity: CGFloat = 0.9,
+                contentOpacity: CGFloat = 1,
                 rerenderFlag: Bool = false,
                 @ViewBuilder _ content: @escaping () -> Content) {
         self.content = content()
