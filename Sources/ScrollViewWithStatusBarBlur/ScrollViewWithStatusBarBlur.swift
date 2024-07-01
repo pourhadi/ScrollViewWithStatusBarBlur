@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import Glur
+
 
 struct ScrollOffsetKey: PreferenceKey {
     static var defaultValue: CGFloat = 0
@@ -81,9 +83,8 @@ public struct ScrollViewWithStatusBarBlur<Content, Background>: View where Conte
                     .mask(alignment: .top) {
                         VStack(spacing: 0) {
                             Color.black.frame(height: outer.safeAreaInsets.top + (topPadding * 2) - 10)
-                            LinearGradient(colors: [.black, .clear],
-                                           startPoint: .top,
-                                           endPoint: .bottom)
+                            Color.black
+
                             .frame(height: 10)
                             Rectangle()
                                 .fill(.clear)
@@ -91,10 +92,14 @@ public struct ScrollViewWithStatusBarBlur<Content, Background>: View where Conte
                         }
                         .offset(y: scrollOffset + outer.safeAreaInsets.top - topPadding)
                     }
-                    .drawingGroup()
-                    .blur(radius: blurRadius, opaque: false)
 
+
+//                    .blur(radius: blurRadius, opaque: false)
                     .offset(y: -scrollOffset - outer.safeAreaInsets.top - topPadding)
+                    .drawingGroup()
+
+                    .compositingGroup()
+                    .glur(radius: 12, offset: 0.0, interpolation: 0.04, direction: .up)
                     .ignoresSafeArea()
                     .allowsHitTesting(false)
                     

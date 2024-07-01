@@ -12,6 +12,7 @@
 		DC3552052C28AB4800111B42 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DC3552042C28AB4800111B42 /* Assets.xcassets */; };
 		DC3552082C28AB4800111B42 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DC3552072C28AB4800111B42 /* Preview Assets.xcassets */; };
 		DC3552102C28AB7F00111B42 /* ScrollViewWithStatusBarBlur.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC35520E2C28AB7F00111B42 /* ScrollViewWithStatusBarBlur.swift */; };
+		DC7D4A872C33190800BCDF59 /* Glur in Frameworks */ = {isa = PBXBuildFile; productRef = DC7D4A862C33190800BCDF59 /* Glur */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC7D4A872C33190800BCDF59 /* Glur in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -95,6 +97,9 @@
 			dependencies = (
 			);
 			name = Demo;
+			packageProductDependencies = (
+				DC7D4A862C33190800BCDF59 /* Glur */,
+			);
 			productName = Demo;
 			productReference = DC3551FD2C28AB4700111B42 /* Demo.app */;
 			productType = "com.apple.product-type.application";
@@ -123,6 +128,9 @@
 				Base,
 			);
 			mainGroup = DC3551F42C28AB4700111B42;
+			packageReferences = (
+				DC7D4A852C33190800BCDF59 /* XCRemoteSwiftPackageReference "Glur" */,
+			);
 			productRefGroup = DC3551FE2C28AB4700111B42 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -359,6 +367,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		DC7D4A852C33190800BCDF59 /* XCRemoteSwiftPackageReference "Glur" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/joogps/Glur";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		DC7D4A862C33190800BCDF59 /* Glur */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DC7D4A852C33190800BCDF59 /* XCRemoteSwiftPackageReference "Glur" */;
+			productName = Glur;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = DC3551F52C28AB4700111B42 /* Project object */;
 }
