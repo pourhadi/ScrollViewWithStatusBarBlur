@@ -99,7 +99,7 @@ public struct ScrollViewWithStatusBarBlur<Content, Background>: View where Conte
                     .drawingGroup()
 
                     .compositingGroup()
-                    .glur(radius: 12, offset: 0.0, interpolation: 0.04, direction: .up)
+                    .glur(radius: 12, offset: 0.0, interpolation: 1 / (image.size.height/(60 + outer.safeAreaInsets.top)), direction: .up)
                     .ignoresSafeArea()
                     .allowsHitTesting(false)
                     
